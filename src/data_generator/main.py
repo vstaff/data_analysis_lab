@@ -1,7 +1,7 @@
 import os
 import time
 import random
-import psycopg  # Изменили импорт
+import psycopg
 from datetime import datetime
 from faker import Faker
 from dotenv import load_dotenv
@@ -15,7 +15,6 @@ DB_USER = os.getenv("DB_USER")
 DB_PASS = os.getenv("DB_PASS")
 DB_PORT = os.getenv("DB_PORT")
 
-# Формируем строку подключения (DSN) для psycopg3
 CONNECTION = f"host={DB_HOST} dbname={DB_NAME} user={DB_USER} password={DB_PASS} port={DB_PORT}"
 
 CATALOG = {
@@ -30,7 +29,6 @@ def connect_db():
     print(f"Попытка подключения к {DB_HOST}...")
     while True:
         try:
-            # В psycopg3 подключение делается через .connect()
             conn = psycopg.connect(CONNECTION)
             return conn
         except Exception as e:
