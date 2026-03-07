@@ -3,11 +3,9 @@ import time
 import random
 import psycopg
 from datetime import datetime
-from faker import Faker
 from dotenv import load_dotenv
 
 load_dotenv()
-fake = Faker('ru_RU')
 
 DB_HOST = os.getenv("DB_HOST")
 DB_NAME = os.getenv("DB_NAME")

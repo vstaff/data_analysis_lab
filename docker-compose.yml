@@ -11,8 +11,6 @@ services:
       - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    networks:
-      - app-network
 
   generator:
     build: .
@@ -27,14 +25,10 @@ services:
       DB_USER: admin
       DB_PASS: "12345"
     restart: on-failure
-    networks:
-      - app-network
 
   redis:
     image: redis:7-alpine
     restart: always
-    networks:
-      - app-network
 
   redash-server:
     image: redash/redash:10.1.0.b50633
@@ -46,39 +40,29 @@ services:
     environment:
       PYTHONUNBUFFERED: 1
       REDASH_LOG_LEVEL: "INFO"
-      REDASH_REDIS_URL: "redis://redis:6379/0"
+      REDASH_REDIS_URL: "redis://redis:6379"
       REDASH_DATABASE_URL: "postgresql://admin:12345@db/online_shop"
       REDASH_COOKIE_SECRET: "very-secret-key"
-    networks:
-      - app-network
 
   redash-scheduler:
     image: redash/redash:10.1.0.b50633
     depends_on:
       - redash-server
     environment:
-      REDASH_REDIS_URL: "redis://redis:6379/0"
+      REDASH_REDIS_URL: "redis://redis:6379"
       REDASH_DATABASE_URL: "postgresql://admin:12345@db/online_shop"
       REDASH_COOKIE_SECRET: "very-secret-key"
     command: scheduler
-    networks:
-      - app-network
 
   redash-worker:
     image: redash/redash:10.1.0.b50633
     depends_on:
       - redash-server
     environment:
-      REDASH_REDIS_URL: "redis://redis:6379/0"
+      REDASH_REDIS_URL: "redis://redis:6379"
       REDASH_DATABASE_URL: "postgresql://admin:12345@db/online_shop"
       REDASH_COOKIE_SECRET: "very-secret-key"
     command: worker
-    networks:
-      - app-network
-
-networks:
-  app-network:
-    driver: bridge
 
 volumes:
   postgres_data:
